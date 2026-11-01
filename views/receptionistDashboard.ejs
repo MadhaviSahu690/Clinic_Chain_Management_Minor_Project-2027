@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Receptionist Dashboard - Clinic Chain</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="app-body">
+<%- include('partials/navbar') %>
+
+<div class="app-wrap">
+  <h1 class="page-title">Welcome, <%= user.displayName || user.name %> 👋</h1>
+  <p class="page-subtitle">Register patients, manage records and book appointments.</p>
+
+  <div class="card-grid">
+    <a href="/receptionist/add-patient" class="action-card">
+      <i class="fa-solid fa-user-plus"></i>
+      <h4>Add Patient</h4>
+      <p>Register a new patient on behalf of the clinic.</p>
+    </a>
+    <a href="/receptionist/patients" class="action-card">
+      <i class="fa-solid fa-users"></i>
+      <h4>All Patients</h4>
+      <p>Search and browse registered patients.</p>
+    </a>
+    <a href="/appointment/book" class="action-card">
+      <i class="fa-solid fa-calendar-plus"></i>
+      <h4>Book Appointment</h4>
+      <p>Schedule a visit for a patient with the right specialist.</p>
+    </a>
+    <a href="/appointment/calendar" class="action-card">
+      <i class="fa-solid fa-calendar-days"></i>
+      <h4>Appointment Calendar</h4>
+      <p>View, confirm or cancel upcoming appointments.</p>
+    </a>
+  </div>
+
+  <div class="panel" style="margin-top:24px;">
+    <h3><i class="fa-solid fa-users"></i> Recently Registered Patients</h3>
+    <div class="table-wrap">
+      <table class="cc-table">
+        <thead><tr><th>Name</th><th>Patient ID</th><th>Phone</th><th>Registered</th></tr></thead>
+        <tbody>
+          <% patients.forEach(p => { %>
+            <tr>
+              <td><%= p.name %></td>
+              <td><%= p.patientId %></td>
+              <td><%= p.phone %></td>
+              <td><%= new Date(p.createdAt || Date.now()).toLocaleDateString() %></td>
+            </tr>
+          <% }) %>
+          <% if (patients.length === 0) { %><tr><td colspan="4">No patients yet.</td></tr><% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h3><i class="fa-solid fa-calendar-days"></i> Recent Appointments</h3>
+    <div class="table-wrap">
+      <table class="cc-table">
+        <thead><tr><th>Date</th><th>Time</th><th>Patient</th><th>Doctor</th><th>Status</th></tr></thead>
+        <tbody>
+          <% appointments.forEach(a => { %>
+            <tr>
+              <td><%= a.date %></td>
+              <td><%= a.time %></td>
+              <td><%= a.patientName %></td>
+              <td><%= a.doctorName %></td>
+              <td><span class="badge badge-info"><%= a.status %></span></td>
+            </tr>
+          <% }) %>
+          <% if (appointments.length === 0) { %><tr><td colspan="5">No appointments yet.</td></tr><% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<%- include('partials/themeScript') %>
+</body>
+</html>

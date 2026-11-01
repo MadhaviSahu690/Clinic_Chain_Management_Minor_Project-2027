@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dr. <%= doctor.name %> - Clinic Chain</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="app-body">
+<%- include('partials/navbar') %>
+
+<div class="app-wrap" style="max-width:860px;">
+  <p><a href="/doctors">&larr; All doctors</a></p>
+
+  <div class="panel" style="display:flex; gap:22px; align-items:center; flex-wrap:wrap;">
+    <div class="avatar lg"><%= doctor.name.replace(/^dr\.?\s*/i, '').trim().charAt(0).toUpperCase() %></div>
+    <div style="flex:1; min-width:220px;">
+      <h1 style="margin:0; font-size:26px;">Dr. <%= doctor.name %></h1>
+      <div class="doc-spec" style="font-size:15px;"><%= doctor.specialization %></div>
+      <div style="margin-top:10px;"><span class="verified-badge"><i class="fa-solid fa-circle-check"></i> Verified by Clinic Chain admin</span></div>
+    </div>
+    <a class="btn-lg" href="/appointment/book?doctor=<%= doctor._id %>"><i class="fa-solid fa-calendar-plus"></i> Book appointment</a>
+  </div>
+
+  <div class="panel">
+    <h3>Verified details</h3>
+    <table class="kv">
+      <tr><td>Specialization</td><td><%= doctor.specialization %></td></tr>
+      <% if (doctor.qualification) { %><tr><td>Qualification</td><td><%= doctor.qualification %></td></tr><% } %>
+      <% if (doctor.experience) { %><tr><td>Experience</td><td><%= doctor.experience %> years</td></tr><% } %>
+      <tr><td>Clinic / hospital</td><td><%= doctor.clinic %></td></tr>
+      <% if (doctor.city || doctor.state) { %><tr><td>Location</td><td><%= [doctor.city, doctor.state].filter(Boolean).join(', ') %></td></tr><% } %>
+      <% if (doctor.regNo) { %><tr><td>Registration no.</td><td><%= doctor.regNo %><% if (doctor.councilName) { %> (<%= doctor.councilName %>)<% } %></td></tr><% } %>
+      <% if (doctor.verificationId) { %><tr><td>Clinic Chain License ID</td><td><span class="license-id"><%= doctor.verificationId %></span></td></tr><% } %>
+      <% if (doctor.verifiedAt) { %><tr><td>Verified on</td><td><%= new Date(doctor.verifiedAt).toLocaleDateString() %></td></tr><% } %>
+    </table>
+  </div>
+</div>
+<%- include('partials/themeScript') %>
+</body>
+</html>

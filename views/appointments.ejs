@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Appointments - Clinic Chain</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="app-body">
+<%- include('partials/navbar') %>
+
+<div class="app-wrap">
+  <h1 class="page-title"><i class="fa-solid fa-calendar-days"></i> Appointments</h1>
+  <p class="page-subtitle"><a href="/appointment/book">+ Book a new appointment</a></p>
+
+  <% const dates = Object.keys(byDate).sort(); %>
+
+  <% if (dates.length === 0) { %>
+    <div class="panel"><p>No appointments scheduled yet.</p></div>
+  <% } %>
+
+  <% dates.forEach(date => { %>
+    <div class="calendar-day-group">
+      <div class="calendar-day-header"><%= new Date(date + 'T00:00:00').toDateString() %></div>
+      <% byDate[date].sort((a,b) => a.time.localeCompare(b.time)).forEach(a => { %>
+        <div class="appt-row">
+          <div class="appt-time"><%= a.time %></div>
+          <div style="flex:1; min-width:180px;">
+            <b><%= a.patientName %></b> (<%= a.patientId %>) with Dr. <%= a.doctorName %> — <%= a.specialization %>
+            <% if (a.reason) { %><div style="font-size:12px; opacity:0.75;"><%= a.reason %></div><% } %>
+          </div>
+          <span class="badge badge-<%= a.status === 'confirmed' ? 'success' : (a.status === 'cancelled' ? 'danger' : (a.status === 'completed' ? 'info' : 'warning')) %>"><%= a.status %></span>
+
+          <% if (user && (user.role === 'doctor' || user.role === 'admin' || user.role === 'receptionist')) { %>
+            <div style="display:flex; gap:6px;">
+              <% if (a.status !== 'confirmed' && a.status !== 'completed' && a.status !== 'cancelled') { %>
+                <form method="POST" action="/appointment/status/<%= a._id %>"><input type="hidden" name="status" value="confirmed"><button class="btn-sm green" type="submit">Confirm</button></form>
+              <% } %>
+              <% if (a.status !== 'completed' && a.status !== 'cancelled') { %>
+                <form method="POST" action="/appointment/status/<%= a._id %>"><input type="hidden" name="status" value="completed"><button class="btn-sm blue" type="submit">Complete</button></form>
+                <form method="POST" action="/appointment/status/<%= a._id %>"><input type="hidden" name="status" value="cancelled"><button class="btn-sm red" type="submit">Cancel</button></form>
+              <% } %>
+            </div>
+          <% } %>
+        </div>
+      <% }) %>
+    </div>
+  <% }) %>
+</div>
+<%- include('partials/themeScript') %>
+</body>
+</html>

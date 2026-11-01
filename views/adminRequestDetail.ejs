@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Review Request - Clinic Chain</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="app-body">
+<%- include('partials/navbar') %>
+
+<div class="app-wrap">
+  <p><a href="/admin/requests">&larr; Back to requests</a></p>
+  <h1 class="page-title">
+    Dr. <%= request.name %>
+    <span class="badge badge-<%= request.status === 'approved' ? 'success' : (request.status === 'rejected' ? 'danger' : 'warning') %>" style="vertical-align:middle; font-size:12px;"><%= request.status %></span>
+  </h1>
+
+  <% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+
+  <div class="detail-grid">
+    <div>
+      <div class="panel">
+        <h3><i class="fa-solid fa-user-doctor"></i> Doctor details</h3>
+        <table class="kv">
+          <tr><td>Full name</td><td><%= request.name %></td></tr>
+          <tr><td>Email</td><td><%= request.email %></td></tr>
+          <tr><td>Phone</td><td><%= request.phone %></td></tr>
+          <tr><td>Specialization</td><td><%= request.specialization %></td></tr>
+          <tr><td>Qualification</td><td><%= request.qualification %></td></tr>
+          <tr><td>Experience</td><td><%= request.experience %> years</td></tr>
+          <tr><td>Registration no.</td><td><b><%= request.regNo %></b></td></tr>
+          <tr><td>Medical council</td><td><%= request.councilName %></td></tr>
+          <tr><td>Clinic / hospital</td><td><%= request.clinic %></td></tr>
+          <tr><td>Location</td><td><%= request.city %>, <%= request.state %></td></tr>
+          <tr><td>Submitted on</td><td><%= new Date(request.createdAt).toLocaleString() %></td></tr>
+          <% if (request.status !== 'pending') { %>
+            <tr><td>Reviewed by</td><td><%= request.reviewedBy %> on <%= request.reviewedAt ? new Date(request.reviewedAt).toLocaleString() : '' %></td></tr>
+          <% } %>
+          <% if (request.status === 'approved') { %>
+            <tr><td>License ID</td><td><span class="license-id"><%= request.verificationId %></span></td></tr>
+          <% } %>
+          <% if (request.status === 'rejected') { %>
+            <tr><td>Rejection reason</td><td><%= request.rejectionReason %></td></tr>
+          <% } %>
+        </table>
+      </div>
+
+      <div class="panel">
+        <h3><i class="fa-solid fa-file-shield"></i> Proof documents</h3>
+        <p style="font-size:13px; opacity:.8; margin-top:-6px;">Check that the name, registration number and specialization match the form above.</p>
+        <% request.proofs.forEach((p, i) => { %>
+          <div class="proof-item">
+            <div>
+              <i class="fa-solid <%= p.contentType === 'application/pdf' ? 'fa-file-pdf' : 'fa-file-image' %>"></i>
+              <span class="pi-name"><%= p.label %></span><br>
+              <span class="pi-file"><%= p.name %> &middot; <%= Math.max(1, Math.round((p.size || 0) / 1024)) %> KB</span>
+            </div>
+            <div style="display:flex; gap:6px;">
+              <a class="btn-sm blue" href="/admin/requests/<%= request._id %>/proof/<%= i %>" target="_blank" rel="noopener">View</a>
+              <a class="btn-sm grey" href="/admin/requests/<%= request._id %>/proof/<%= i %>?download=1">Download</a>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    </div>
+
+    <div>
+      <% if (request.status === 'pending') { %>
+        <div class="panel">
+          <h3><i class="fa-solid fa-circle-check" style="color:#1e9e6b;"></i> Approve</h3>
+          <p style="font-size:13.5px; line-height:1.55;">Approving creates the doctor's account, issues a License ID, lists the doctor in the public verified directory and sends a notification.</p>
+          <form method="POST" action="/admin/requests/<%= request._id %>/approve" onsubmit="return confirm('Have you verified all the documents? Approve this doctor?');">
+            <button class="btn-lg green" type="submit" style="width:100%; justify-content:center;"><i class="fa-solid fa-check"></i> Approve &amp; issue license</button>
+          </form>
+        </div>
+        <div class="panel reject-form">
+          <h3><i class="fa-solid fa-circle-xmark" style="color:#d9432c;"></i> Reject</h3>
+          <form method="POST" action="/admin/requests/<%= request._id %>/reject">
+            <label style="font-size:13px; font-weight:600;">Reason (shown to the doctor)</label>
+            <textarea name="reason" required placeholder="e.g. Registration certificate is not readable"></textarea>
+            <button class="btn-lg red" type="submit" style="width:100%; justify-content:center;"><i class="fa-solid fa-xmark"></i> Reject request</button>
+          </form>
+        </div>
+      <% } else { %>
+        <div class="panel">
+          <h3>Decision</h3>
+          <p>This request is already <b><%= request.status %></b>.</p>
+          <% if (request.doctorId) { %><a class="btn-lg" href="/admin/doctor/<%= request.doctorId %>">Open doctor profile</a><% } %>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</div>
+<%- include('partials/themeScript') %>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin Login - Clinic Chain</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="app-body">
+<%- include('partials/navbar') %>
+
+<div style="display:flex; justify-content:center; padding-top: 40px;">
+  <div class="container">
+    <h2><i class="fa-solid fa-user-shield"></i> Admin Login</h2>
+
+    <% if (error) { %>
+      <p style="color:#d9432c; font-size:13px;"><%= error %></p>
+    <% } %>
+
+    <form action="/admin/login" method="POST">
+      <input type="text" name="username" placeholder="Admin Username" required>
+      <div class="password-field">
+        <input type="password" id="password" name="password" placeholder="Password" required>
+        <span onclick="togglePassword()"><i class="fa fa-eye" id="eye"></i></span>
+      </div>
+      <button type="submit">Login</button>
+    </form>
+    <p style="margin-top:14px; opacity:0.75;">First time? Run <code>npm run seed:admin</code> to create a default admin account.</p>
+  </div>
+</div>
+
+<script>
+function togglePassword(){
+    const password = document.getElementById("password");
+    const eye = document.getElementById("eye");
+    if(password.type === "password"){
+        password.type = "text";
+        eye.classList.remove("fa-eye"); eye.classList.add("fa-eye-slash");
+    }else{
+        password.type = "password";
+        eye.classList.remove("fa-eye-slash"); eye.classList.add("fa-eye");
+    }
+}
+</script>
+<%- include('partials/themeScript') %>
+</body>
+</html>

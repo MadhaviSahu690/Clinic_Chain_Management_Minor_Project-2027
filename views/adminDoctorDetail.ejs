@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Doctor Details - Clinic Chain</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="app-body">
+<%- include('partials/navbar') %>
+
+<div class="app-wrap">
+  <p><a href="/admin/dashboard#doctors">&larr; Back to dashboard</a></p>
+  <div class="panel" style="display:flex; gap:20px; align-items:center; flex-wrap:wrap;">
+    <div class="avatar lg"><%= doctor.name.replace(/^dr\.?\s*/i, '').trim().charAt(0).toUpperCase() %></div>
+    <div style="flex:1; min-width:220px;">
+      <h2 style="margin:0;">Dr. <%= doctor.name %></h2>
+      <div class="doc-spec"><%= doctor.specialization %></div>
+      <div style="margin-top:8px; display:flex; gap:8px; flex-wrap:wrap;">
+        <% if (doctor.verificationId) { %><span class="verified-badge"><i class="fa-solid fa-circle-check"></i> Verified &middot; <span class="license-id"><%= doctor.verificationId %></span></span><% } %>
+        <span class="badge <%= doctor.status === 'removed' ? 'badge-danger' : 'badge-success' %>"><%= doctor.status %></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="detail-grid">
+    <div class="panel">
+      <h3>Details</h3>
+      <table class="kv">
+        <tr><td>Email</td><td><%= doctor.email || '-' %></td></tr>
+        <tr><td>Phone</td><td><%= doctor.phone || '-' %></td></tr>
+        <tr><td>Qualification</td><td><%= doctor.qualification || '-' %></td></tr>
+        <tr><td>Experience</td><td><%= doctor.experience || 0 %> years</td></tr>
+        <tr><td>Registration no.</td><td><%= doctor.regNo || '-' %></td></tr>
+        <tr><td>Medical council</td><td><%= doctor.councilName || '-' %></td></tr>
+        <tr><td>Clinic</td><td><%= doctor.clinic || '-' %></td></tr>
+        <tr><td>Location</td><td><%= [doctor.city, doctor.state].filter(Boolean).join(', ') || '-' %></td></tr>
+        <tr><td>Verified on</td><td><%= doctor.verifiedAt ? new Date(doctor.verifiedAt).toLocaleString() : '-' %> <% if (doctor.verifiedBy) { %>by <%= doctor.verifiedBy %><% } %></td></tr>
+        <% if (doctor.status === 'removed') { %><tr><td>Removed reason</td><td><%= doctor.removedReason %></td></tr><% } %>
+      </table>
+    </div>
+
+    <div class="panel">
+      <h3><i class="fa-solid fa-file-shield"></i> Submitted proof</h3>
+      <% if (request) { %>
+        <% request.proofs.forEach((p, i) => { %>
+          <div class="proof-item">
+            <div>
+              <i class="fa-solid <%= p.contentType === 'application/pdf' ? 'fa-file-pdf' : 'fa-file-image' %>"></i>
+              <span class="pi-name"><%= p.label %></span><br>
+              <span class="pi-file"><%= p.name %></span>
+            </div>
+            <a class="btn-sm blue" href="/admin/requests/<%= request._id %>/proof/<%= i %>" target="_blank" rel="noopener">View</a>
+          </div>
+        <% }) %>
+        <p><a href="/admin/requests/<%= request._id %>">Open original request</a></p>
+      <% } else { %>
+        <p style="opacity:.75;">No proof documents are stored for this doctor (account created before the request system).</p>
+      <% } %>
+    </div>
+  </div>
+</div>
+<%- include('partials/themeScript') %>
+</body>
+</html>

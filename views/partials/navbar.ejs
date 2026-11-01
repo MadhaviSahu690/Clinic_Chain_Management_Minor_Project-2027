@@ -1,0 +1,58 @@
+<link rel="stylesheet" href="/css/app.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<div class="app-navbar">
+  <a href="/" class="brand">
+    <img src="/images/logo.png" alt="logo">
+    Clinic Chain
+  </a>
+
+  <div class="nav-links">
+    <% const unread = (typeof unreadCount !== 'undefined') ? unreadCount : 0; %>
+    <% if (typeof currentUser !== 'undefined' && currentUser) { %>
+      <% if (currentUser.role === 'doctor') { %>
+        <a href="/dashboard"><i class="fa-solid fa-gauge"></i> Dashboard</a>
+        <a href="/patient/register"><i class="fa-solid fa-user-plus"></i> Register Patient</a>
+        <a href="/patient/search"><i class="fa-solid fa-magnifying-glass"></i> Search Patient</a>
+        <a href="/appointment/calendar"><i class="fa-solid fa-calendar-days"></i> Appointments</a>
+        <a href="/doctors"><i class="fa-solid fa-user-doctor"></i> Doctors</a>
+      <% } else if (currentUser.role === 'admin') { %>
+        <a href="/admin/dashboard"><i class="fa-solid fa-gauge"></i> Dashboard</a>
+        <a href="/admin/requests"><i class="fa-solid fa-id-card-clip"></i> Doctor Requests</a>
+        <a href="/admin/activity"><i class="fa-solid fa-triangle-exclamation"></i> Activity Log</a>
+        <a href="/admin/receptionist/add"><i class="fa-solid fa-user-plus"></i> Add Receptionist</a>
+        <a href="/doctors"><i class="fa-solid fa-user-doctor"></i> Doctors</a>
+      <% } else if (currentUser.role === 'receptionist') { %>
+        <a href="/receptionist/dashboard"><i class="fa-solid fa-gauge"></i> Dashboard</a>
+        <a href="/receptionist/add-patient"><i class="fa-solid fa-user-plus"></i> Add Patient</a>
+        <a href="/receptionist/patients"><i class="fa-solid fa-users"></i> Patients</a>
+        <a href="/appointment/book"><i class="fa-solid fa-calendar-plus"></i> Book</a>
+        <a href="/doctors"><i class="fa-solid fa-user-doctor"></i> Doctors</a>
+      <% } %>
+      <a href="/notifications" class="bell" title="Notifications"><i class="fa-solid fa-bell"></i><% if (unread > 0) { %><span class="bell-count"><%= unread > 9 ? '9+' : unread %></span><% } %></a>
+      <span class="role-pill">
+        <% if (currentUser.role === 'doctor') { %><i class="fa-solid fa-user-doctor"></i> Dr. <%= currentUser.name %>
+        <% } else if (currentUser.role === 'admin') { %><i class="fa-solid fa-user-shield"></i> Admin
+        <% } else { %><i class="fa-solid fa-user-tie"></i> <%= currentUser.displayName || currentUser.name %><% } %>
+      </span>
+      <a href="/auth/logout" class="logout"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+    <% } else { %>
+      <a href="/"><i class="fa-solid fa-house"></i> Home</a>
+      <a href="/doctors"><i class="fa-solid fa-user-doctor"></i> Find Doctors</a>
+      <a href="/appointment/book"><i class="fa-solid fa-calendar-plus"></i> Book Appointment</a>
+      <a href="/patient/search"><i class="fa-solid fa-notes-medical"></i> My Records</a>
+      <a href="/about">About</a>
+      <div class="nav-dropdown">
+        <span class="dd-toggle" tabindex="0"><i class="fa-solid fa-right-to-bracket"></i> Staff Login <i class="fa-solid fa-chevron-down" style="font-size:10px;"></i></span>
+        <div class="dd-menu">
+          <a href="/auth/login"><i class="fa-solid fa-user-doctor"></i> Doctor Login</a>
+          <a href="/auth/request-license"><i class="fa-solid fa-id-card-clip"></i> Request License</a>
+          <a href="/receptionist/login"><i class="fa-solid fa-user-tie"></i> Receptionist</a>
+          <a href="/admin/login"><i class="fa-solid fa-user-shield"></i> Admin</a>
+        </div>
+      </div>
+    <% } %>
+  </div>
+</div>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Register Patient - Clinic Chain</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="app-body">
+<%- include('partials/navbar') %>
+
+<div style="display:flex; justify-content:center; padding-top: 20px;">
+  <div class="container">
+    <h2>Register Patient</h2>
+
+    <% if (error) { %>
+      <p style="color:#d9432c; font-size:13px;"><%= error %></p>
+    <% } %>
+    <% if (typeof message !== 'undefined' && message) { %>
+      <p style="color:#1e9e6b; font-size:13px;"><%= message %></p>
+    <% } %>
+
+    <form action="/patient/register" method="POST">
+      <input name="name" placeholder="Full Name" required>
+      <input name="phone" placeholder="Phone Number" required>
+      <input name="aadhar" placeholder="Aadhar Number" required>
+      <input name="dob" type="date" placeholder="Date of Birth" required>
+      <select name="preferredLanguage">
+        <option value="English">Preferred language: English</option>
+        <option value="Hindi">Hindi</option>
+        <option value="Bengali">Bengali</option>
+        <option value="Marathi">Marathi</option>
+        <option value="Telugu">Telugu</option>
+        <option value="Tamil">Tamil</option>
+        <option value="Gujarati">Gujarati</option>
+        <option value="Urdu">Urdu</option>
+        <option value="Kannada">Kannada</option>
+        <option value="Punjabi">Punjabi</option>
+        <option value="Malayalam">Malayalam</option>
+      </select>
+      <button type="submit">Register</button>
+    </form>
+  </div>
+</div>
+<%- include('partials/themeScript') %>
+</body>
+</html>

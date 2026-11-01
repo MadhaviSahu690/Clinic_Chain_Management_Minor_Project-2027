@@ -1,0 +1,48 @@
+{
+  "name": "clinic-chain",
+  "version": "1.0.0",
+  "description": "Healthcare records are often fragmented, especially in small and rural clinics. Patients frequently lose their medical history, leading to repeated tests, delayed treatment, and poor continuity of care.",
+  "main": "app.js",
+  "type": "commonjs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "seed:admin": "node scripts/seedAdmin.js"
+  },
+  "dependencies": {
+    "axios": "^1.13.6",
+    "bcryptjs": "^3.0.3",
+    "cookie-parser": "^1.4.7",
+    "crypto-js": "^4.2.0",
+    "dotenv": "^17.3.1",
+    "ejs": "^5.0.1",
+    "express": "^5.2.1",
+    "i18n": "^0.15.3",
+    "ipfs-http-client": "^60.0.1",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.3.1",
+    "multer": "^2.1.1",
+    "nodemailer": "^10.2.1",
+    "otp-generator": "^4.0.1",
+    "qrcode": "^1.5.4",
+    "twilio": "^5.13.0"
+  },
+  "devDependencies": {
+    "@nomiclabs/hardhat-ethers": "^2.2.3",
+    "ethers": "^5.8.0",
+    "hardhat": "^2.28.6",
+    "nodemon": "^3.1.14"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dgd456sfh/ClinicChain.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Dgd456sfh/ClinicChain/issues"
+  },
+  "homepage": "https://github.com/Dgd456sfh/ClinicChain#readme"
+}

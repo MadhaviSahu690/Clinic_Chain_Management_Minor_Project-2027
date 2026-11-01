@@ -1,0 +1,20 @@
+<button id="theme-btn" class="theme-toggle-btn"></button>
+<script>
+  document.body.classList.add('app-body');
+  const btn = document.getElementById("theme-btn");
+
+  function updateButtonText() {
+    btn.textContent = document.body.classList.contains('dark-mode') ? '🌙' : '☀️';
+  }
+
+  btn.addEventListener("click", () => {
+    document.body.classList.toggle("dark-mode");
+    localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+    updateButtonText();
+  });
+
+  if (localStorage.getItem('theme') === 'dark') {
+    document.body.classList.add('dark-mode');
+  }
+  updateButtonText();
+</script>

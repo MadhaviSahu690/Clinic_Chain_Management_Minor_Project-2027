@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Search Patient - Clinic Chain</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="app-body">
+<%- include('partials/navbar') %>
+
+<div style="display:flex; justify-content:center; padding-top: 40px;">
+  <div class="container">
+    <h2>Search Patient</h2>
+
+    <form action="/patient/search" method="POST">
+      <input name="patientId" placeholder="Enter Patient ID" required>
+      <button type="submit">Search</button>
+    </form>
+
+    <div style="margin-top: 10px;">
+      <a href="/patient/forgot-patient-id">
+        <button type="button">Forgot Patient ID</button>
+      </a>
+    </div>
+  </div>
+</div>
+<%- include('partials/themeScript') %>
+</body>
+</html>

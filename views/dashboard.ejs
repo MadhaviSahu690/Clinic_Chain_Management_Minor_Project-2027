@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard - Clinic Chain</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="app-body">
+<%- include('partials/navbar') %>
+
+<div class="app-wrap">
+  <h1 class="page-title">Welcome back<% if (typeof user !== 'undefined' && user) { %>, Dr. <%= user.name %><% } %> 👋</h1>
+  <p class="page-subtitle"><% if (typeof user !== 'undefined' && user && user.specialization) { %><%= user.specialization %><% } %></p>
+
+  <% if (typeof doctor !== 'undefined' && doctor && doctor.verificationId) { %>
+  <div class="panel" style="display:flex; gap:18px; align-items:center; flex-wrap:wrap;">
+    <div class="avatar lg"><%= doctor.name.replace(/^dr\.?\s*/i, '').trim().charAt(0).toUpperCase() %></div>
+    <div style="flex:1; min-width:220px;">
+      <span class="verified-badge"><i class="fa-solid fa-circle-check"></i> Verified doctor</span>
+      <h3 style="margin:8px 0 2px 0;"><%= doctor.specialization %></h3>
+      <div style="font-size:13.5px; opacity:.85;"><%= doctor.clinic %><% if (doctor.city) { %>, <%= doctor.city %><% } %><% if (doctor.state) { %>, <%= doctor.state %><% } %></div>
+    </div>
+    <div style="text-align:right;">
+      <div style="font-size:12px; opacity:.7;">Your License ID</div>
+      <div class="license-id" style="font-size:20px;"><%= doctor.verificationId %></div>
+      <a href="/doctors/<%= doctor._id %>" style="font-size:12.5px;">View public profile</a>
+    </div>
+  </div>
+  <% } %>
+
+  <div class="card-grid">
+    <a href="/patient/register" class="action-card">
+      <i class="fa-solid fa-user-plus"></i>
+      <h4>Register Patient</h4>
+      <p>Create a new patient record and issue a Patient ID.</p>
+    </a>
+
+    <a href="/patient/search" class="action-card">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <h4>Search Patient</h4>
+      <p>Find a patient by ID to view history or add a record.</p>
+    </a>
+
+    <a href="/appointment/calendar" class="action-card">
+      <i class="fa-solid fa-calendar-days"></i>
+      <h4>My Appointments</h4>
+      <p>View your upcoming appointments and confirm or complete visits.</p>
+    </a>
+
+    <a href="/appointment/book" class="action-card">
+      <i class="fa-solid fa-calendar-plus"></i>
+      <h4>Book Appointment</h4>
+      <p>Schedule a visit for a patient on the calendar.</p>
+    </a>
+  </div>
+</div>
+<%- include('partials/themeScript') %>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Doctor Login - Clinic Chain</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="app-body">
+<%- include('partials/navbar') %>
+
+<div style="display:flex; justify-content:center; padding-top: 40px;">
+  <div class="container">
+    <h2>Doctor Login</h2>
+
+    <% if (typeof error !== 'undefined' && error) { %>
+      <p style="color:#d9432c; font-size:13px;"><%= error %></p>
+    <% } %>
+
+    <form action="/auth/login" method="POST">
+      <input type="text" name="email" placeholder="Email (or doctor name)" required>
+      <div class="password-field">
+        <input type="password" id="password" name="password" placeholder="Password">
+        <span onclick="togglePassword()"><i class="fa fa-eye" id="eye"></i></span>
+      </div>
+      <button>Login</button>
+    </form>
+    <p style="margin-top:12px; opacity:0.85; font-size:13.5px;">New doctor? <a href="/auth/request-license">Request your license</a><br><a href="/auth/request-status">Check request status</a></p>
+  </div>
+</div>
+
+<script>
+function togglePassword(){
+    const password = document.getElementById("password");
+    const eye = document.getElementById("eye");
+    if(password.type === "password"){
+        password.type = "text";
+        eye.classList.remove("fa-eye"); eye.classList.add("fa-eye-slash");
+    }else{
+        password.type = "password";
+        eye.classList.remove("fa-eye-slash"); eye.classList.add("fa-eye");
+    }
+}
+</script>
+<%- include('partials/themeScript') %>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Request Status - Clinic Chain</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="app-body">
+<%- include('partials/navbar') %>
+
+<div class="app-wrap" style="max-width:720px;">
+  <h1 class="page-title"><i class="fa-solid fa-hourglass-half"></i> License request status</h1>
+
+  <% if (submitted) { %>
+    <div class="alert alert-success"><i class="fa-solid fa-circle-check"></i> Your request was submitted. The admin has been notified and will review your documents.</div>
+  <% } %>
+
+  <div class="panel">
+    <form method="GET" action="/auth/request-status" class="verify-box">
+      <input type="email" name="email" value="<%= email %>" placeholder="Enter the email you used in the request" required>
+      <button class="btn-lg" type="submit"><i class="fa-solid fa-magnifying-glass"></i> Check</button>
+    </form>
+  </div>
+
+  <% if (searched && !request) { %>
+    <div class="panel empty-state">
+      <i class="fa-solid fa-inbox"></i>
+      <h3>No request found for this email</h3>
+      <p>Check the spelling, or <a href="/auth/request-license">submit a new request</a>.</p>
+    </div>
+  <% } %>
+
+  <% if (request && request.status === 'pending') { %>
+    <div class="panel status-hero pending">
+      <div class="big-icon"><i class="fa-solid fa-hourglass-half"></i></div>
+      <h2>Waiting for admin approval</h2>
+      <p>Hello Dr. <%= request.name %>, your request for <b><%= request.specialization %></b> was received on <%= new Date(request.createdAt).toLocaleDateString() %>. The admin is checking your documents. You will get your License ID here and in your notifications once it is approved.</p>
+    </div>
+  <% } %>
+
+  <% if (request && request.status === 'approved') { %>
+    <div class="panel status-hero approved">
+      <div class="big-icon"><i class="fa-solid fa-circle-check"></i></div>
+      <h2>Your license is approved!</h2>
+      <p>Congratulations Dr. <%= request.name %>. You are now a verified <b><%= request.specialization %></b> on Clinic Chain.</p>
+      <div class="license-box"><span style="font-size:12px; display:block; opacity:.8;">Your License ID</span><span class="license-id"><%= request.verificationId %></span></div>
+      <p>Log in with your email and the password you chose while requesting.</p>
+      <a href="/auth/login" class="btn-lg green"><i class="fa-solid fa-right-to-bracket"></i> Log in now</a>
+    </div>
+  <% } %>
+
+  <% if (request && request.status === 'rejected') { %>
+    <div class="panel status-hero rejected">
+      <div class="big-icon"><i class="fa-solid fa-circle-xmark"></i></div>
+      <h2>Request not approved</h2>
+      <p><b>Reason from admin:</b> <%= request.rejectionReason %></p>
+      <p>You can fix the problem and submit a new request.</p>
+      <a href="/auth/request-license" class="btn-lg"><i class="fa-solid fa-rotate-right"></i> Submit a new request</a>
+    </div>
+  <% } %>
+</div>
+<%- include('partials/themeScript') %>
+</body>
+</html>

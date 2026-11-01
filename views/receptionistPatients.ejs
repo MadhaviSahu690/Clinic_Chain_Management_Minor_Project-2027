@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Patients - Clinic Chain</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="app-body">
+<%- include('partials/navbar') %>
+
+<div class="app-wrap">
+  <h1 class="page-title"><i class="fa-solid fa-users"></i> Patients</h1>
+
+  <div class="panel">
+    <form method="GET" action="/receptionist/patients" style="display:flex; gap:10px; flex-wrap:wrap;">
+      <input type="text" name="q" placeholder="Search by name, phone or Patient ID" value="<%= q %>" style="flex:1; min-width:220px; padding:12px 14px; border-radius:12px; border:1px solid rgba(11,61,145,0.15);">
+      <button type="submit" class="btn-sm blue" style="padding:12px 18px;">Search</button>
+    </form>
+  </div>
+
+  <div class="panel">
+    <div class="table-wrap">
+      <table class="cc-table">
+        <thead><tr><th>Name</th><th>Patient ID</th><th>Phone</th><th>Flag</th><th>Action</th></tr></thead>
+        <tbody>
+          <% patients.forEach(p => { %>
+            <tr>
+              <td><%= p.name %></td>
+              <td><%= p.patientId %></td>
+              <td><%= p.phone %></td>
+              <td><% if (p.flagged) { %><span class="badge badge-danger">Flagged</span><% } else { %><span class="badge badge-neutral">Normal</span><% } %></td>
+              <td style="display:flex; gap:6px; flex-wrap:wrap;">
+                <a class="btn-sm blue" href="/patient/history/<%= p.patientId %>">History</a>
+                <a class="btn-sm green" href="/appointment/book/<%= p.patientId %>">Book</a>
+              </td>
+            </tr>
+          <% }) %>
+          <% if (patients.length === 0) { %><tr><td colspan="5">No patients found.</td></tr><% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<%- include('partials/themeScript') %>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Doctor Requests - Clinic Chain</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="app-body">
+<%- include('partials/navbar') %>
+
+<div class="app-wrap">
+  <h1 class="page-title"><i class="fa-solid fa-id-card-clip"></i> Doctor license requests</h1>
+  <p class="page-subtitle">Review the details and proof documents, then approve or reject. Approved doctors receive a notification and a License ID.</p>
+
+  <div class="tabs">
+    <a href="/admin/requests?status=pending" class="tab-btn <%= status==='pending' ? 'active' : '' %>">Pending (<%= counts.pending %>)</a>
+    <a href="/admin/requests?status=approved" class="tab-btn <%= status==='approved' ? 'active' : '' %>">Approved (<%= counts.approved %>)</a>
+    <a href="/admin/requests?status=rejected" class="tab-btn <%= status==='rejected' ? 'active' : '' %>">Rejected (<%= counts.rejected %>)</a>
+  </div>
+
+  <% if (requests.length === 0) { %>
+    <div class="panel empty-state"><i class="fa-solid fa-inbox"></i><h3>No <%= status %> requests</h3></div>
+  <% } else { %>
+  <div class="panel">
+    <div class="table-wrap">
+      <table class="cc-table">
+        <thead><tr><th>Doctor</th><th>Specialization</th><th>Location</th><th>Reg. No.</th><th>Submitted</th><th>Proofs</th><th>Action</th></tr></thead>
+        <tbody>
+          <% requests.forEach(r => { %>
+            <tr>
+              <td><b><%= r.name %></b><br><small><%= r.email %></small></td>
+              <td><%= r.specialization %><br><small><%= r.qualification %></small></td>
+              <td><%= r.city %>, <%= r.state %><br><small><%= r.clinic %></small></td>
+              <td><%= r.regNo %><br><small><%= r.councilName %></small></td>
+              <td><%= new Date(r.createdAt).toLocaleDateString() %></td>
+              <td><span class="badge badge-info"><%= r.proofs.length %> files</span></td>
+              <td><a class="btn-sm blue" href="/admin/requests/<%= r._id %>"><%= status === 'pending' ? 'Review' : 'View' %></a></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <% } %>
+</div>
+<%- include('partials/themeScript') %>
+</body>
+</html>

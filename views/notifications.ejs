@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Notifications - Clinic Chain</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="app-body">
+<%- include('partials/navbar') %>
+
+<div class="app-wrap" style="max-width:760px;">
+  <h1 class="page-title"><i class="fa-solid fa-bell"></i> Notifications</h1>
+
+  <% if (notifications.length === 0) { %>
+    <div class="panel empty-state"><i class="fa-regular fa-bell"></i><h3>No notifications yet</h3><p>Important updates will appear here.</p></div>
+  <% } %>
+
+  <% notifications.forEach(n => { %>
+    <div class="notif <%= unreadIds.includes(String(n._id)) ? 'unread' : '' %>">
+      <div class="n-icon"><i class="fa-solid fa-<%= /approved/i.test(n.title) ? 'circle-check' : (/request/i.test(n.title) ? 'id-card-clip' : 'bell') %>"></i></div>
+      <div style="flex:1;">
+        <div class="n-title"><%= n.title %></div>
+        <div class="n-msg"><%= n.message %></div>
+        <div class="n-time"><%= new Date(n.createdAt).toLocaleString() %></div>
+        <% if (n.link) { %><a class="btn-sm blue" style="margin-top:8px;" href="<%= n.link %>">Open</a><% } %>
+      </div>
+    </div>
+  <% }) %>
+</div>
+<%- include('partials/themeScript') %>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Patient Profile - Clinic Chain</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="app-body">
+<%- include('partials/navbar') %>
+
+<div style="display:flex; justify-content:center; padding-top: 30px;">
+  <div class="container" style="max-width:480px;">
+    <h2>Patient Profile</h2>
+
+    <% if (patient) { %>
+      <p><b>Name:</b> <%= patient.name %></p>
+      <p><b>Patient ID:</b> <%= patient.patientId %></p>
+      <% if (patient.preferredLanguage) { %><p><b>Preferred Language:</b> <%= patient.preferredLanguage %></p><% } %>
+      <% if (patient.flagged) { %>
+        <p><span class="badge badge-danger">Flagged for review</span></p>
+      <% } %>
+
+      <div style="margin-top: 25px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+        <a href="/record/add/<%= patient.patientId %>"><button>Add Record</button></a>
+        <a href="/patient/history/<%= patient.patientId %>"><button>View History</button></a>
+        <a href="/patient/qr/<%= patient.patientId %>"><button>View via QR</button></a>
+        <a href="/appointment/book/<%= patient.patientId %>"><button>📅 Book Appointment</button></a>
+        <a href="/chatbot/<%= patient.patientId %>"><button>🤖 AI Health Assistant</button></a>
+      </div>
+    <% } else { %>
+      <p>Patient data not found.</p>
+    <% } %>
+  </div>
+</div>
+<%- include('partials/themeScript') %>
+</body>
+</html>

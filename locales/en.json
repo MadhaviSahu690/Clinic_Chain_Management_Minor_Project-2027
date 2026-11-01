@@ -1,0 +1,18 @@
+{
+	"home": "Home",
+	"about": "About Us",
+	"login": "Login",
+	"sign": "Sign",
+	"language": "language",
+	
+	"secureSystem": "Secure Patient History System",
+	"getStarted": "Get Started",
+	"secureRecords": "Secure Records",
+	"secureRecordsDesc": "Patient medical reports stored safely with tamper detection.",
+	"doctorVerification": "Doctor Verification",
+	"doctorVerificationDesc": "Only licensed doctors can upload and verify reports.",
+	"qrAccess": "QR Access",
+	"qrAccessDesc": "Scan QR to instantly view patient health history.",
+	"copyright": "© Copyright 2026 | All Rights Reserved clinic-chain.com"
+
+}

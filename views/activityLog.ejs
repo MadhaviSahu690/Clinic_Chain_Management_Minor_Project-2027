@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Activity Log - Clinic Chain</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="app-body">
+<%- include('partials/navbar') %>
+
+<div class="app-wrap">
+  <h1 class="page-title"><i class="fa-solid fa-shield-halved"></i> Activity Log</h1>
+  <p class="page-subtitle">Every sensitive action across the clinic — logins, registrations, removals and AI usage — plus anything flagged as unwanted activity.</p>
+
+  <div class="tabs">
+    <a href="/admin/activity?filter=all" class="tab-btn <%= filter==='all' ? 'active' : '' %>">All</a>
+    <a href="/admin/activity?filter=flagged" class="tab-btn <%= filter==='flagged' ? 'active' : '' %>">Flagged</a>
+    <a href="/admin/activity?filter=unresolved" class="tab-btn <%= filter==='unresolved' ? 'active' : '' %>">Unresolved</a>
+  </div>
+
+  <div class="panel">
+    <div class="table-wrap">
+      <table class="cc-table">
+        <thead><tr><th>When</th><th>Type</th><th>Actor</th><th>Role</th><th>Description</th><th>Severity</th><th>Status</th><th>Action</th></tr></thead>
+        <tbody>
+          <% activity.forEach(a => { %>
+            <tr>
+              <td><%= new Date(a.createdAt).toLocaleString() %></td>
+              <td><%= a.type %></td>
+              <td><%= a.actor %></td>
+              <td><span class="badge badge-neutral"><%= a.role %></span></td>
+              <td><%= a.description %></td>
+              <td><span class="badge badge-<%= a.severity === 'high' ? 'danger' : (a.severity==='warning' ? 'warning' : 'info') %>"><%= a.severity %></span></td>
+              <td>
+                <% if (a.flagged) { %>
+                  <span class="badge <%= a.resolved ? 'badge-success' : 'badge-danger' %>"><%= a.resolved ? 'Resolved' : 'Needs review' %></span>
+                <% } else { %>
+                  <span class="badge badge-neutral">—</span>
+                <% } %>
+              </td>
+              <td>
+                <% if (a.flagged && !a.resolved) { %>
+                  <form method="POST" action="/admin/activity/resolve/<%= a._id %>">
+                    <button class="btn-sm green" type="submit">Resolve</button>
+                  </form>
+                <% } %>
+              </td>
+            </tr>
+          <% }) %>
+          <% if (activity.length === 0) { %><tr><td colspan="8">No activity recorded yet.</td></tr><% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<%- include('partials/themeScript') %>
+</body>
+</html>

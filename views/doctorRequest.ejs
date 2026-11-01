@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Request License - Clinic Chain</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="app-body">
+<%- include('partials/navbar') %>
+<% const v = (k) => (form && form[k]) ? form[k] : ''; %>
+<% const states = ["Andhra Pradesh","Assam","Bihar","Chhattisgarh","Delhi","Goa","Gujarat","Haryana","Himachal Pradesh","Jharkhand","Karnataka","Kerala","Madhya Pradesh","Maharashtra","Odisha","Punjab","Rajasthan","Tamil Nadu","Telangana","Uttar Pradesh","Uttarakhand","West Bengal","Other"]; %>
+
+<div class="app-wrap" style="max-width:860px;">
+  <div class="hero-banner">
+    <h1><i class="fa-solid fa-id-card-clip"></i> Request your Clinic Chain License</h1>
+    <p>Send your details and proof documents. After the admin checks and approves them, you receive a notification with your verified License ID and can log in.</p>
+  </div>
+
+  <div class="steps">
+    <div class="step"><b>1</b><h4>Submit request</h4><p>Fill the form and upload your proof documents.</p></div>
+    <div class="step"><b>2</b><h4>Admin verifies</h4><p>The admin reviews your registration and documents.</p></div>
+    <div class="step"><b>3</b><h4>Get your license</h4><p>You get a notification and a License ID.</p></div>
+    <div class="step"><b>4</b><h4>Log in</h4><p>Use your email and password to start practising.</p></div>
+  </div>
+
+  <% if (error) { %><div class="alert alert-error"><i class="fa-solid fa-circle-exclamation"></i> <%= error %></div><% } %>
+
+  <div class="panel">
+    <form action="/auth/request-license" method="POST" enctype="multipart/form-data">
+
+      <div class="form-section-title" style="margin-top:0;"><i class="fa-solid fa-user"></i> Personal details</div>
+      <div class="form-grid">
+        <div><label>Full name *</label><input type="text" name="name" value="<%= v('name') %>" placeholder="e.g. Rehan Khan" required></div>
+        <div><label>Email *</label><input type="email" name="email" value="<%= v('email') %>" placeholder="used to log in" required></div>
+        <div><label>Phone *</label><input type="text" name="phone" value="<%= v('phone') %>" placeholder="10 digit mobile number" required></div>
+        <div><label>Password * (min 6 characters)</label><input type="password" name="password" minlength="6" required></div>
+      </div>
+
+      <div class="form-section-title"><i class="fa-solid fa-stethoscope"></i> Professional details</div>
+      <div class="form-grid">
+        <div>
+          <label>Specialization *</label>
+          <select name="specialization" required>
+            <% specializations.forEach(s => { %>
+              <option value="<%= s %>" <%= v('specialization') === s ? 'selected' : '' %>><%= s %></option>
+            <% }) %>
+          </select>
+        </div>
+        <div><label>Qualification *</label><input type="text" name="qualification" value="<%= v('qualification') %>" placeholder="e.g. MBBS, MD (Cardiology)" required></div>
+        <div><label>Experience (years)</label><input type="number" name="experience" min="0" max="70" value="<%= v('experience') %>" placeholder="e.g. 8"></div>
+        <div><label>Medical registration number *</label><input type="text" name="regNo" value="<%= v('regNo') %>" placeholder="as on your registration certificate" required></div>
+        <div class="form-full">
+          <label>Medical council *</label>
+          <input type="text" name="councilName" list="councils" value="<%= v('councilName') %>" placeholder="Council that issued your registration" required>
+          <datalist id="councils">
+            <option value="National Medical Commission (NMC)">
+            <option value="Chhattisgarh Medical Council">
+            <option value="Madhya Pradesh Medical Council">
+            <option value="Maharashtra Medical Council">
+            <option value="Delhi Medical Council">
+            <option value="Uttar Pradesh Medical Council">
+            <option value="Gujarat Medical Council">
+            <option value="Karnataka Medical Council">
+            <option value="Tamil Nadu Medical Council">
+            <option value="West Bengal Medical Council">
+          </datalist>
+        </div>
+      </div>
+
+      <div class="form-section-title"><i class="fa-solid fa-location-dot"></i> Clinic & location</div>
+      <div class="form-grid">
+        <div class="form-full"><label>Clinic / hospital name *</label><input type="text" name="clinic" value="<%= v('clinic') %>" placeholder="e.g. Rehan's Clinic" required></div>
+        <div><label>City *</label><input type="text" name="city" value="<%= v('city') %>" placeholder="e.g. Bilaspur" required></div>
+        <div>
+          <label>State *</label>
+          <select name="state" required>
+            <% states.forEach(s => { %>
+              <option value="<%= s %>" <%= (v('state') || 'Chhattisgarh') === s ? 'selected' : '' %>><%= s %></option>
+            <% }) %>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-section-title"><i class="fa-solid fa-file-shield"></i> Proof documents (PDF, JPG or PNG, max 4 MB each)</div>
+      <div class="form-grid">
+        <div class="upload-tile">
+          <label>Medical Registration Certificate <span class="req">*</span></label>
+          <input type="file" name="registrationCertificate" accept=".pdf,.jpg,.jpeg,.png" required>
+          <div class="hint">Issued by the medical council</div>
+        </div>
+        <div class="upload-tile">
+          <label>Degree Certificate <span class="req">*</span></label>
+          <input type="file" name="degreeCertificate" accept=".pdf,.jpg,.jpeg,.png" required>
+          <div class="hint">MBBS / MD / MS or equivalent</div>
+        </div>
+        <div class="upload-tile">
+          <label>Government ID Proof <span class="req">*</span></label>
+          <input type="file" name="idProof" accept=".pdf,.jpg,.jpeg,.png" required>
+          <div class="hint">Aadhaar, PAN, Passport or Driving Licence</div>
+        </div>
+      </div>
+
+      <div class="consent" style="margin:22px 0 18px 0;">
+        <input type="checkbox" id="consent" required>
+        <label for="consent" style="margin:0; font-weight:500;">I confirm that all the details and documents are genuine. I understand that false information will lead to rejection and may be reported.</label>
+      </div>
+
+      <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
+        <button type="submit" class="btn-lg"><i class="fa-solid fa-paper-plane"></i> Submit request</button>
+        <a href="/auth/request-status" class="btn-lg outline">Check request status</a>
+        <a href="/auth/login" style="font-size:13.5px;">Already approved? Log in</a>
+      </div>
+    </form>
+  </div>
+</div>
+<%- include('partials/themeScript') %>
+</body>
+</html>

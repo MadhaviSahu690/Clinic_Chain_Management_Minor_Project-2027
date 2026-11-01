@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Book Appointment - Clinic Chain</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
+</head>
+<body class="app-body">
+<%- include('partials/navbar') %>
+
+<div class="app-wrap" style="max-width:720px;">
+  <h1 class="page-title"><i class="fa-solid fa-calendar-plus"></i> Book an Appointment</h1>
+  <p class="page-subtitle">Pick a specialist and a visiting date &amp; time.</p>
+
+  <% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+  <% if (success) { %><div class="alert alert-success"><%= success %></div><% } %>
+
+  <div class="panel">
+    <form action="/appointment/book" method="POST">
+      <div class="form-grid">
+        <div>
+          <label>Patient ID</label>
+          <input type="text" name="patientId" placeholder="e.g. CC-4F9A2B" value="<%= patient ? patient.patientId : '' %>" required>
+        </div>
+        <div>
+          <label>Specialization</label>
+          <select id="specializationFilter">
+            <option value="">All specializations</option>
+            <% specializations.forEach(s => { %>
+              <option value="<%= s %>"><%= s %></option>
+            <% }) %>
+          </select>
+        </div>
+
+        <div class="form-full">
+          <label>Doctor</label>
+          <select name="doctorId" id="doctorSelect" required>
+            <% doctors.forEach(d => { %>
+              <option value="<%= d._id %>" data-spec="<%= d.specialization %>" <%= (typeof selectedDoctor !== 'undefined' && String(selectedDoctor) === String(d._id)) ? 'selected' : '' %>>Dr. <%= d.name %> — <%= d.specialization %> (<%= d.clinic %><%= d.city ? ', ' + d.city : '' %>) ✓ Verified</option>
+            <% }) %>
+          </select>
+        </div>
+
+        <div>
+          <label>Visiting Date</label>
+          <input type="text" id="datePicker" name="date" placeholder="Choose a date" required autocomplete="off">
+        </div>
+        <div>
+          <label>Preferred Time</label>
+          <input type="time" name="time" required>
+        </div>
+
+        <div class="form-full">
+          <label>Reason for visit</label>
+          <textarea name="reason" rows="3" placeholder="Briefly describe the symptoms or reason for the appointment"></textarea>
+        </div>
+
+        <div class="form-full">
+          <button type="submit" style="width:100%; padding:14px; border-radius:12px; border:none; background:linear-gradient(90deg,#2C79C9,#0b3d91); color:white; font-weight:700; font-size:15px; cursor:pointer;">Book Appointment</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <% if (patient) { %>
+    <div class="panel">
+      <h3>Patient</h3>
+      <p><b><%= patient.name %></b> · ID: <%= patient.patientId %> · Phone: <%= patient.phone %></p>
+    </div>
+  <% } %>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
+<script>
+  flatpickr("#datePicker", {
+    minDate: "today",
+    dateFormat: "Y-m-d",
+    disable: [
+      function(date) {
+        // disable Sundays as a simple example of clinic off-days
+        return date.getDay() === 0;
+      }
+    ]
+  });
+
+  const specFilter = document.getElementById('specializationFilter');
+  const doctorSelect = document.getElementById('doctorSelect');
+  const allOptions = Array.from(doctorSelect.options);
+
+  specFilter.addEventListener('change', () => {
+    const val = specFilter.value;
+    doctorSelect.innerHTML = '';
+    allOptions
+      .filter(o => !val || o.dataset.spec === val)
+      .forEach(o => doctorSelect.appendChild(o.cloneNode(true)));
+    if (doctorSelect.options.length === 0) {
+      const opt = document.createElement('option');
+      opt.textContent = 'No doctors available in this specialization';
+      doctorSelect.appendChild(opt);
+    }
+  });
+</script>
+<%- include('partials/themeScript') %>
+</body>
+</html>

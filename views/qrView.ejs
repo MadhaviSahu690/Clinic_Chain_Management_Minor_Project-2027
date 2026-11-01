@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>QR Access - Clinic Chain</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="app-body">
+<%- include('partials/navbar') %>
+
+<div style="display:flex; justify-content:center; padding-top: 30px;">
+  <div class="container" style="text-align:center;">
+    <h2>Scan QR to View Patient History</h2>
+    <img src="<%= qr %>" width="250" style="margin-top:30px;" />
+    <p style="margin-top:15px; font-size:14px;">
+      Scan this QR with your phone to open the patient's history page
+    </p>
+  </div>
+</div>
+<%- include('partials/themeScript') %>
+</body>
+</html>

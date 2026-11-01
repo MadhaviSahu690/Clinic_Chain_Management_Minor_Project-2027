@@ -1,0 +1,76 @@
+<link rel="stylesheet" href="/css/home.css">
+<%# <link rel="stylesheet" href="/css/style.css"> %>
+
+<body>
+
+<div class="navbar">
+<div class="logo-wrap">
+  <img src="/images/logo.png" alt="Clinic Chain Logo" class="navbar-logo">
+  <span class="brand-name">Clinic Chain</span>
+</div>
+
+<div class="nav">
+<a href="#">Home</a>
+<a href="/about">About us</a>
+<a href="/auth/register">Sign</a>
+<a href="/auth/login">Login</a>
+</div>
+</div>
+
+
+<div class="hero">
+
+<h1>Secure Patient History System</h1>
+
+<h2 id="quote">
+Connecting clinics, protecting patient history
+</h2>
+
+<a href="/auth/register"><button class="btn">Get Started</button></a>
+
+</div>
+
+
+<div class="features">
+
+<div class="card">
+<h3>Secure Records</h3>
+<p>Patient medical reports stored safely with tamper detection.</p>
+</div>
+
+<div class="card">
+<h3>Doctor Verification</h3>
+<p>Only licensed doctors can upload and verify reports.</p>
+</div>
+
+<div class="card">
+<h3>QR Access</h3>
+<p>Scan QR to instantly view patient health history.</p>
+</div>
+
+</div>
+
+
+<div class="footer">
+ ©Copyright 2026 | All Rights Reserved clinic-chain.com
+</div>
+
+
+<script>
+
+const quotes = [
+"Connecting clinics, protecting patient history",
+"One chain, secure care for every patient"
+];
+
+let index = 0;
+
+setInterval(function(){
+document.getElementById("quote").innerText = quotes[index];
+index = (index + 1) % quotes.length;
+},3000);
+
+</script>
+
+</body>
+</html>

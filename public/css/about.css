@@ -1,0 +1,108 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #e6f2ff;
+}
+
+.about {
+    padding: 50px 80px;
+    text-align: center;
+}
+
+.about h1 {
+    color: #0b3d91;
+    margin-bottom: 40px;
+}
+
+/* Section Layout */
+.about-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 50px;
+    gap: 30px;
+}
+
+.about-container.reverse {
+    flex-direction: row-reverse;
+}
+
+/* Text */
+.about-text {
+    width: 50%;
+    text-align: left;
+}
+
+.about-text h2 {
+    color: #0b3d91;
+}
+
+.about-text p {
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Image */
+.about-img img {
+    width: 400px;
+    border-radius: 12px;
+}
+
+/* Features */
+.features {
+    margin-top: 40px;
+}
+
+.features h2 {
+    color: #0b3d91;
+}
+
+.feature-box {
+    display: inline-block;
+    width: 200px;
+    margin: 20px;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.feature-box img {
+    width: 50px;
+    margin-bottom: 10px;
+}
+
+
+/* Floating square button */
+.theme-toggle-btn {
+  position: fixed;
+  top: 20px;        /* distance from top */
+  right: 20px;      /* distance from right side */
+  width: 50px;      /* square size */
+  height: 50px;
+  border: none;
+  border-radius: 8px;   /* slightly rounded */
+  background: #0b3d91;  /* default light mode color */
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 14px;
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
+
+.theme-toggle-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 15px rgba(2, 133, 193, 0.6);
+}
+/* Dark mode styling for the body */
+body.dark-mode {
+  background: #121212;
+  color: #e0e0e0;
+}
+
+/* Change button color in dark mode */
+body.dark-mode .theme-toggle-btn {
+  background: #0288d1;
+  color: #fff;
+}

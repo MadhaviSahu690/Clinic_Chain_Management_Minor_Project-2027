@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin Dashboard - Clinic Chain</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="app-body">
+<%- include('partials/navbar') %>
+
+<div class="app-wrap">
+  <h1 class="page-title"><i class="fa-solid fa-user-shield"></i> Admin Dashboard</h1>
+  <p class="page-subtitle">Full control over doctors, patients, receptionists, appointments and unwanted activity.</p>
+
+  <div class="stat-grid">
+    <div class="stat-card"><div class="stat-value"><%= stats.totalDoctors %></div><div class="stat-label">Active Doctors</div></div>
+    <div class="stat-card"><div class="stat-value"><%= stats.totalPatients %></div><div class="stat-label">Total Patients</div></div>
+    <div class="stat-card"><div class="stat-value"><%= stats.totalReceptionists %></div><div class="stat-label">Receptionists</div></div>
+    <div class="stat-card"><div class="stat-value"><%= stats.totalAppointments %></div><div class="stat-label">Recent Appointments</div></div>
+    <div class="stat-card <%= stats.flaggedPatients > 0 ? 'alert' : '' %>"><div class="stat-value"><%= stats.flaggedPatients %></div><div class="stat-label">Flagged Patients</div></div>
+    <a href="/admin/requests" style="text-decoration:none; color:inherit;" class="stat-card <%= stats.pendingRequests > 0 ? 'alert' : '' %>"><div class="stat-value"><%= stats.pendingRequests %></div><div class="stat-label">Pending Doctor Requests</div></a>
+    <div class="stat-card <%= stats.openAlerts > 0 ? 'alert' : '' %>"><div class="stat-value"><%= stats.openAlerts %></div><div class="stat-label">Open Security Alerts</div></div>
+  </div>
+
+  <% if (pendingRequests.length > 0) { %>
+  <div class="panel" style="border:1px solid rgba(217,138,28,0.45);">
+    <h3><i class="fa-solid fa-id-card-clip" style="color:#d98a1c;"></i> <%= pendingRequests.length %> doctor license request<%= pendingRequests.length === 1 ? '' : 's' %> waiting for your review</h3>
+    <div class="table-wrap">
+      <table class="cc-table">
+        <thead><tr><th>Doctor</th><th>Specialization</th><th>Location</th><th>Submitted</th><th>Action</th></tr></thead>
+        <tbody>
+          <% pendingRequests.slice(0, 5).forEach(r => { %>
+            <tr>
+              <td><b><%= r.name %></b></td>
+              <td><%= r.specialization %></td>
+              <td><%= r.city %>, <%= r.state %></td>
+              <td><%= new Date(r.createdAt).toLocaleDateString() %></td>
+              <td><a class="btn-sm blue" href="/admin/requests/<%= r._id %>">Review</a></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+    <p style="margin-top:12px;"><a href="/admin/requests">Open all requests &rarr;</a></p>
+  </div>
+  <% } %>
+
+  <% if (flaggedActivity.length > 0) { %>
+  <div class="panel" style="border: 1px solid rgba(217,67,44,0.35);">
+    <h3><i class="fa-solid fa-triangle-exclamation" style="color:#d9432c;"></i> Unwanted / Suspicious Activity Needing Review</h3>
+    <div class="table-wrap">
+      <table class="cc-table">
+        <thead><tr><th>When</th><th>Type</th><th>Actor</th><th>Description</th><th>Severity</th><th>Action</th></tr></thead>
+        <tbody>
+          <% flaggedActivity.forEach(a => { %>
+            <tr>
+              <td><%= new Date(a.createdAt).toLocaleString() %></td>
+              <td><%= a.type %></td>
+              <td><%= a.actor %> <span class="badge badge-neutral"><%= a.role %></span></td>
+              <td><%= a.description %></td>
+              <td><span class="badge badge-<%= a.severity === 'high' ? 'danger' : (a.severity==='warning' ? 'warning' : 'info') %>"><%= a.severity %></span></td>
+              <td>
+                <form class="form-inline" method="POST" action="/admin/activity/resolve/<%= a._id %>">
+                  <button class="btn-sm green" type="submit">Mark resolved</button>
+                </form>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+    <p style="margin-top:12px;"><a href="/admin/activity">View full activity log →</a></p>
+  </div>
+  <% } %>
+
+  <div class="tabs">
+    <a href="#doctors" class="tab-btn" data-tab="doctors">Doctors</a>
+    <a href="#patients" class="tab-btn" data-tab="patients">Patients</a>
+    <a href="#receptionists" class="tab-btn" data-tab="receptionists">Receptionists</a>
+    <a href="#appointments" class="tab-btn" data-tab="appointments">Appointments</a>
+  </div>
+
+  <!-- DOCTORS -->
+  <div class="tab-panel" id="doctors">
+    <div class="panel">
+      <h3><i class="fa-solid fa-user-doctor"></i> Doctors (<%= doctors.length %>)</h3>
+      <p style="margin-top:-6px;"><a href="/admin/requests">Review license requests &rarr;</a></p>
+      <div class="table-wrap">
+        <table class="cc-table">
+          <thead><tr><th>Name</th><th>Specialization</th><th>Location</th><th>License ID</th><th>Status</th><th>Action</th></tr></thead>
+          <tbody>
+            <% doctors.forEach(d => { %>
+              <tr>
+                <td><b><%= d.name %></b><br><small><%= d.email || '' %></small></td>
+                <td><%= d.specialization %><br><small><%= d.qualification || '' %></small></td>
+                <td><%= [d.city, d.state].filter(Boolean).join(', ') || '-' %><br><small><%= d.clinic %></small></td>
+                <td><span class="license-id"><%= d.verificationId || d.license || '-' %></span></td>
+                <td><span class="badge <%= d.status === 'removed' ? 'badge-danger' : 'badge-success' %>"><%= d.status %></span></td>
+                <td style="display:flex; gap:6px; flex-wrap:wrap;">
+                  <a class="btn-sm blue" href="/admin/doctor/<%= d._id %>">Details</a>
+                  <% if (d.status !== 'removed') { %>
+                    <form class="form-inline" method="POST" action="/admin/doctor/remove/<%= d._id %>" onsubmit="return confirm('Remove this doctor?');">
+                      <input type="hidden" name="reason" value="Removed by admin">
+                      <button class="btn-sm red" type="submit">Remove</button>
+                    </form>
+                  <% } else { %>
+                    <form class="form-inline" method="POST" action="/admin/doctor/restore/<%= d._id %>">
+                      <button class="btn-sm green" type="submit">Restore</button>
+                    </form>
+                  <% } %>
+                </td>
+              </tr>
+            <% }) %>
+            <% if (doctors.length === 0) { %><tr><td colspan="6">No doctors yet.</td></tr><% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- PATIENTS -->
+  <div class="tab-panel" id="patients">
+    <div class="panel">
+      <h3><i class="fa-solid fa-users"></i> Patients (<%= patients.length %>)</h3>
+      <div class="table-wrap">
+        <table class="cc-table">
+          <thead><tr><th>Name</th><th>Patient ID</th><th>Phone</th><th>Registered By</th><th>Flag</th><th>Action</th></tr></thead>
+          <tbody>
+            <% patients.forEach(p => { %>
+              <tr>
+                <td><%= p.name %></td>
+                <td><%= p.patientId %></td>
+                <td><%= p.phone %></td>
+                <td><%= p.registeredBy || 'self' %></td>
+                <td>
+                  <% if (p.flagged) { %>
+                    <span class="badge badge-danger" title="<%= p.flagReason %>">Flagged</span>
+                  <% } else { %>
+                    <span class="badge badge-neutral">Normal</span>
+                  <% } %>
+                </td>
+                <td style="display:flex; gap:6px; flex-wrap:wrap;">
+                  <% if (!p.flagged) { %>
+                    <form class="form-inline" method="POST" action="/admin/patient/flag/<%= p.patientId %>">
+                      <input type="hidden" name="reason" value="Flagged by admin for manual review">
+                      <button class="btn-sm grey" type="submit">Flag</button>
+                    </form>
+                  <% } else { %>
+                    <form class="form-inline" method="POST" action="/admin/patient/unflag/<%= p.patientId %>">
+                      <button class="btn-sm green" type="submit">Unflag</button>
+                    </form>
+                  <% } %>
+                  <form class="form-inline" method="POST" action="/admin/patient/remove/<%= p.patientId %>" onsubmit="return confirm('Permanently remove this patient record?');">
+                    <input type="hidden" name="reason" value="Removed by admin">
+                    <button class="btn-sm red" type="submit">Remove</button>
+                  </form>
+                </td>
+              </tr>
+            <% }) %>
+            <% if (patients.length === 0) { %><tr><td colspan="6">No patients yet.</td></tr><% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- RECEPTIONISTS -->
+  <div class="tab-panel" id="receptionists">
+    <div class="panel">
+      <h3><i class="fa-solid fa-user-tie"></i> Receptionists (<%= receptionists.length %>)</h3>
+      <p style="margin-top:-6px;"><a href="/admin/receptionist/add">+ Add a new receptionist</a></p>
+      <div class="table-wrap">
+        <table class="cc-table">
+          <thead><tr><th>Name</th><th>Username</th><th>Clinic</th><th>Status</th><th>Action</th></tr></thead>
+          <tbody>
+            <% receptionists.forEach(r => { %>
+              <tr>
+                <td><%= r.name %></td>
+                <td><%= r.username %></td>
+                <td><%= r.clinic %></td>
+                <td><span class="badge <%= r.status === 'removed' ? 'badge-danger' : 'badge-success' %>"><%= r.status %></span></td>
+                <td>
+                  <% if (r.status !== 'removed') { %>
+                    <form class="form-inline" method="POST" action="/admin/receptionist/remove/<%= r._id %>" onsubmit="return confirm('Remove this receptionist?');">
+                      <button class="btn-sm red" type="submit">Remove</button>
+                    </form>
+                  <% } %>
+                </td>
+              </tr>
+            <% }) %>
+            <% if (receptionists.length === 0) { %><tr><td colspan="5">No receptionists yet.</td></tr><% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- APPOINTMENTS -->
+  <div class="tab-panel" id="appointments">
+    <div class="panel">
+      <h3><i class="fa-solid fa-calendar-days"></i> Recent Appointments</h3>
+      <p style="margin-top:-6px;"><a href="/appointment/calendar">View full calendar →</a></p>
+      <div class="table-wrap">
+        <table class="cc-table">
+          <thead><tr><th>Date</th><th>Time</th><th>Patient</th><th>Doctor</th><th>Specialization</th><th>Status</th></tr></thead>
+          <tbody>
+            <% appointments.forEach(a => { %>
+              <tr>
+                <td><%= a.date %></td>
+                <td><%= a.time %></td>
+                <td><%= a.patientName %></td>
+                <td><%= a.doctorName %></td>
+                <td><%= a.specialization %></td>
+                <td><span class="badge badge-info"><%= a.status %></span></td>
+              </tr>
+            <% }) %>
+            <% if (appointments.length === 0) { %><tr><td colspan="6">No appointments yet.</td></tr><% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // Tabs
+  const tabBtns = document.querySelectorAll('.tab-btn');
+  const panels = document.querySelectorAll('.tab-panel');
+  function activate(tab) {
+    tabBtns.forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+    panels.forEach(p => p.classList.toggle('active', p.id === tab));
+  }
+  tabBtns.forEach(b => b.addEventListener('click', (e) => {
+    e.preventDefault();
+    activate(b.dataset.tab);
+    history.replaceState(null, '', '#' + b.dataset.tab);
+  }));
+  const startTab = (location.hash || '#doctors').replace('#', '');
+  activate(document.getElementById(startTab) ? startTab : 'doctors');
+</script>
+<%- include('partials/themeScript') %>
+</body>
+</html>

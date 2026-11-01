@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Find a Verified Doctor - Clinic Chain</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="app-body">
+<%- include('partials/navbar') %>
+
+<div class="app-wrap">
+  <div class="hero-banner">
+    <h1><i class="fa-solid fa-user-doctor"></i> Find a verified doctor</h1>
+    <p>Every doctor listed here has been checked by the clinic admin: registration number, degree and ID proof. Search by specialization, place or name.</p>
+    <form class="search-bar" method="GET" action="/doctors">
+      <select name="specialization">
+        <option value="">All specializations</option>
+        <% specializations.forEach(s => { %>
+          <option value="<%= s %>" <%= filters.specialization === s ? 'selected' : '' %>><%= s %></option>
+        <% }) %>
+      </select>
+      <input type="text" name="place" value="<%= filters.place %>" placeholder="City, state or clinic">
+      <input type="text" name="q" value="<%= filters.q %>" placeholder="Doctor name">
+      <button type="submit"><i class="fa-solid fa-magnifying-glass"></i> Search</button>
+    </form>
+  </div>
+
+  <div class="chip-row">
+    <a class="chip <%= !filters.specialization ? 'active' : '' %>" href="/doctors">All</a>
+    <% specializations.filter(s => counts[s]).forEach(s => { %>
+      <a class="chip <%= filters.specialization === s ? 'active' : '' %>" href="/doctors?specialization=<%= encodeURIComponent(s) %>"><%= s %><small>(<%= counts[s] %>)</small></a>
+    <% }) %>
+  </div>
+
+  <div class="panel">
+    <h3><i class="fa-solid fa-shield-halved"></i> Check a License ID</h3>
+    <p style="margin-top:-4px; font-size:13.5px; opacity:.85;">A doctor gave you a License ID (like CCL-A1B2C3)? Check that it is real.</p>
+    <form class="verify-box" method="GET" action="/doctors/verify">
+      <input type="text" name="licenseId" placeholder="CCL-XXXXXX" value="<%= verifyResult && verifyResult.licenseId ? verifyResult.licenseId : '' %>" maxlength="20">
+      <button class="btn-lg" type="submit">Verify</button>
+    </form>
+    <% if (verifyResult && verifyResult.searched) { %>
+      <% if (verifyResult.doctor) { %>
+        <div class="result-box ok">
+          <i class="fa-solid fa-circle-check"></i> <b>Verified.</b>
+          License <span class="license-id"><%= verifyResult.licenseId %></span> belongs to
+          <b>Dr. <%= verifyResult.doctor.name %></b>, <%= verifyResult.doctor.specialization %>, <%= verifyResult.doctor.city %>, <%= verifyResult.doctor.state %>.
+          <a href="/doctors/<%= verifyResult.doctor._id %>">View profile</a>
+        </div>
+      <% } else if (verifyResult.removed) { %>
+        <div class="result-box bad"><i class="fa-solid fa-triangle-exclamation"></i> This license exists but the doctor is <b>no longer active</b> on Clinic Chain.</div>
+      <% } else { %>
+        <div class="result-box bad"><i class="fa-solid fa-circle-xmark"></i> No doctor found with this License ID. Be careful.</div>
+      <% } %>
+    <% } %>
+  </div>
+
+  <h2 style="color:var(--cc-primary); margin:6px 0 16px 0;">
+    <%= doctors.length %> verified doctor<%= doctors.length === 1 ? '' : 's' %><% if (filters.specialization) { %> in <%= filters.specialization %><% } %>
+  </h2>
+
+  <% if (doctors.length === 0) { %>
+    <div class="panel empty-state">
+      <i class="fa-solid fa-user-doctor"></i>
+      <h3>No doctors found</h3>
+      <p>Try another specialization or place, or clear the filters.</p>
+      <a class="btn-lg outline" href="/doctors">Clear filters</a>
+    </div>
+  <% } else { %>
+    <div class="doc-grid">
+      <% doctors.forEach(d => { %>
+        <div class="doc-card">
+          <div class="doc-head">
+            <div class="avatar"><%= d.name.replace(/^dr\.?\s*/i, '').trim().charAt(0).toUpperCase() %></div>
+            <div>
+              <h3 class="doc-name">Dr. <%= d.name %></h3>
+              <div class="doc-spec"><%= d.specialization %></div>
+            </div>
+          </div>
+          <div><span class="verified-badge"><i class="fa-solid fa-circle-check"></i> Verified license</span></div>
+          <div class="doc-meta">
+            <% if (d.qualification) { %><div><i class="fa-solid fa-graduation-cap"></i> <%= d.qualification %></div><% } %>
+            <% if (d.experience) { %><div><i class="fa-solid fa-briefcase-medical"></i> <%= d.experience %> years experience</div><% } %>
+            <div><i class="fa-solid fa-hospital"></i> <%= d.clinic %></div>
+            <% if (d.city || d.state) { %><div><i class="fa-solid fa-location-dot"></i> <%= [d.city, d.state].filter(Boolean).join(', ') %></div><% } %>
+            <% if (d.verificationId) { %><div><i class="fa-solid fa-id-badge"></i> <span class="license-id"><%= d.verificationId %></span></div><% } %>
+          </div>
+          <div class="doc-actions">
+            <a class="btn-sm grey" href="/doctors/<%= d._id %>">Profile</a>
+            <a class="btn-sm blue" href="/appointment/book?doctor=<%= d._id %>"><i class="fa-solid fa-calendar-plus"></i> Book</a>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  <% } %>
+</div>
+<%- include('partials/themeScript') %>
+</body>
+</html>

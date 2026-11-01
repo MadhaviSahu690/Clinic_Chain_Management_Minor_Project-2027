@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Clinic Chain</title>
+
+
+<link rel="stylesheet" href="/css/home.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+</head>
+
+<body>
+   <div id="opening">
+    <img src="/images/logo.png" class="opening-logo">
+</div>
+ 
+
+<!-- NAVBAR -->
+<div class="navbar">
+    <div class="logo-wrap">
+        <img src="/images/logo.png" class="logo">
+        <span class="brand-name"></span>
+    </div>
+
+    <div class="nav">
+        <a href="#">Home</a>
+        <a href="/about">About us</a>
+        <a href="/doctors">Find Doctors</a>
+        <a href="/appointment/book">Book Appointment</a>
+        <a href="/auth/request-license">Request License</a>
+        <a href="/auth/login">Doctor Login</a>
+        <a href="/receptionist/login">Receptionist</a>
+        <a href="/admin/login">Admin</a>
+    </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+    <h1>Secure Patient History System</h1>
+
+    <h2 id="quote">
+        Connecting clinics, protecting patient history
+    </h2>
+
+    <a href="/doctors">
+        <button class="btn">Find a Verified Doctor</button>
+    </a>
+    <a href="/auth/request-license">
+        <button class="btn" style="background:#3987d5; border:2px solid #2929e3; margin-left:12px;">I am a Doctor</button>
+    </a>
+    <a href="/patient/search">
+        <button class="btn" style="background:#3987d5; border:2px solid #2929e3; margin-left:12px;">My Records</button>
+    </a>
+</div>
+
+<!-- FEATURES -->
+<div class="features">
+
+    <div class="card">
+        <h3>🔒 Secure Records</h3>
+        <p>Patient medical reports stored safely with tamper detection.</p>
+    </div>
+
+    <div class="card">
+        <h3>✅ Verified Doctors Only</h3>
+        <p>Doctors send their registration and proof documents. The admin checks them and issues a License ID before they can treat patients.</p>
+    </div>
+
+    <div class="card">
+        <h3>📱 QR Access</h3>
+        <p>Scan QR to instantly view patient health history.</p>
+    </div>
+
+    <div class="card">
+        <h3>🩺 Search by Specialization</h3>
+        <p>Find a verified Gynecologist, Cardiologist, Neurologist, Dermatologist and more, with their clinic and location.</p>
+    </div>
+
+    <div class="card">
+        <h3>📅 Easy Appointments</h3>
+        <p>Book a visit with the right specialist using a simple calendar-based form.</p>
+    </div>
+
+    <div class="card">
+        <h3>🤖 AI Health Assistant</h3>
+        <p>Get your medical report summarized in plain language — in your own language.</p>
+    </div>
+
+    <div class="card">
+        <h3>🧑‍💼 Front-Desk Ready</h3>
+        <p>Receptionists can register walk-in patients and book appointments in seconds.</p>
+    </div>
+
+    <div class="card">
+        <h3>🛡️ Admin Oversight</h3>
+        <p>Admins manage doctors, patients and receptionists, and monitor flagged/unwanted activity.</p>
+    </div>
+
+</div>
+
+
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+    
+    <div class="social-icons">
+        <a href="https://facebook.com" target="_blank">
+            <i class="fab fa-facebook-f"></i>
+        </a>
+
+        <a href="https://x.com" target="_blank">
+            <i class="fab fa-x-twitter"></i>
+        </a>
+
+        <a href="https://linkedin.com" target="_blank">
+            <i class="fab fa-linkedin-in"></i>
+        </a>
+
+        <a href="https://instagram.com" target="_blank">
+            <i class="fab fa-instagram"></i>
+        </a>
+    </div>
+
+    <p>© Copyright 2026 | All Rights Reserved clinic-chain.com</p>
+
+</footer>
+
+<!-- JS -->
+<script>
+const quotes = [
+"Connecting clinics, protecting patient history",
+"One chain, secure care for every patient"
+];
+
+let index = 0;
+
+setInterval(function(){
+    document.getElementById("quote").innerText = quotes[index];
+    index = (index + 1) % quotes.length;
+},3000);
+</script>
+<script>
+function toggleLang() {
+    const menu = document.getElementById("langMenu");
+    menu.style.display = menu.style.display === "block" ? "none" : "block";
+}
+
+window.onclick = function(event) {
+    if (!event.target.matches('button')) {
+        document.getElementById("langMenu").style.display = "none";
+    }
+}
+</script>
+
+</body>
+</html>
+
+<script>
+// hide opening after animation
+setTimeout(()=>{
+    const opening = document.getElementById("opening");
+
+    opening.style.transition = "opacity 1s";
+    opening.style.opacity = 0;
+
+    setTimeout(()=>{
+        opening.style.display = "none";
+        document.body.style.overflow = "auto";
+    },1000);
+
+},2500);
+</script>

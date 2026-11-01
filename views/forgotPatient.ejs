@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Forgot Patient ID</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Segoe UI;
+      background: #e6f2ff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .box {
+      background: #e6f2ff;
+      padding: 40px;
+      width: 320px;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      text-align: center;
+      transition: 0.3s;
+    }
+
+    .box:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      color: #0b3d91;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      outline: none;
+      transition: 0.3s;
+    }
+
+    input:focus {
+      border-color: #0b3d91;
+      box-shadow: 0 0 8px rgba(11,61,145,0.2);
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #0b3d91;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background: #062a66;
+      transform: scale(1.03);
+    }
+
+    .resend {
+      background: #ccc;
+      color: black;
+    }
+
+    .resend:hover {
+      background: #aaa;
+    }
+
+    .error {
+      color: red;
+      margin-top: 10px;
+    }
+
+    .success {
+      color: green;
+      margin-top: 10px;
+      font-size: 18px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="box">
+
+  <h2>Forgot Patient ID</h2>
+
+  <!-- STEP 1 -->
+  <% if (step === 1) { %>
+    <form action="/patient/send-otp" method="POST">
+      <input type="text" name="phone" placeholder="Enter phone number" required>
+      <button type="submit">Send OTP</button>
+    </form>
+  <% } %>
+
+  <!-- STEP 2 -->
+  <% if (step === 2) { %>
+    <form action="/patient/verify-otp" method="POST">
+      <input type="hidden" name="phone" value="<%= phone %>">
+      <input type="text" name="otp" placeholder="Enter OTP">
+      <button type="submit">Verify OTP</button>
+    </form>
+
+    <form action="/patient/resend-otp" method="POST">
+      <input type="hidden" name="phone" value="<%= phone %>">
+      <button class="resend">Resend OTP</button>
+    </form>
+  <% } %>
+
+  <!-- STEP 3 -->
+  <% if (step === 3) { %>
+    <div class="success">
+      Your Patient ID:<br>
+      <b><%= patientId %></b>
+    </div>
+  <% } %>
+
+  <!-- ERROR -->
+  <% if (error) { %>
+    <div class="error"><%= error %></div>
+  <% } %>
+
+</div>
+
+</body>
+</html>

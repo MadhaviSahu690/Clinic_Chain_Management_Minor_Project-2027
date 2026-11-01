@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>About Us - Clinic Chain</title>
+    <link rel="stylesheet" href="/css/about.css">
+</head>
+<body>
+
+<section class="about">
+
+    <h1>About Us</h1>
+
+    <!-- Intro Section -->
+    <div class="about-container"><button id="theme-btn" class="theme-toggle-btn"></button>
+        <div class="about-text">
+            <h2>Who We Are</h2>
+            <p>
+                Clinic Chain is a smart healthcare platform designed to connect multiple clinics 
+                and provide secure, fast, and organized patient data management. 
+                Our goal is to simplify healthcare services and improve patient experience.
+            </p>
+        </div>
+
+        <div class="about-img">
+           <img src="https://w0.peakpx.com/wallpaper/315/432/HD-wallpaper-medical-hospital.jpg" alt="clinic">
+        </div>
+    </div>
+
+    <!-- Mission Section -->
+    <div class="about-container reverse">
+        <div class="about-text">
+            <h2>Our Mission</h2>
+            <p>
+                We aim to provide a reliable system where doctors and clinics can access 
+                patient records easily, reduce errors, and deliver better treatment.
+            </p>
+        </div>
+
+        <div class="about-img">
+            <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef" alt="doctor">
+        </div>
+    </div>
+
+    <!-- Why Choose Us -->
+    <div class="features">
+        <h2>Why Choose Us</h2>
+
+        <div class="feature-box">
+            <img src="https://cdn-icons-png.flaticon.com/512/2920/2920277.png">
+            <p>Secure Data Management</p>
+        </div>
+
+        <div class="feature-box">
+            <img src="https://cdn-icons-png.flaticon.com/512/3063/3063820.png">
+            <p>Easy Access Records</p>
+        </div>
+
+        <div class="feature-box">
+            <img src="https://cdn-icons-png.flaticon.com/512/2966/2966480.png">
+            <p>Fast & Reliable System</p>
+        </div>
+
+    </div>
+
+</section>
+
+</body>
+</html>
+<script>
+ 
+const btn = document.getElementById("theme-btn");
+
+function updateButtonText() {
+  btn.textContent = document.body.classList.contains('dark-mode') ? '🌙' : '☀️';
+}
+
+btn.addEventListener("click", () => {
+  document.body.classList.toggle("dark-mode");
+  localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+  updateButtonText();
+});
+
+// Load saved theme on page load
+if(localStorage.getItem('theme') === 'dark'){
+  document.body.classList.add('dark-mode');
+}
+updateButtonText();
+</script>

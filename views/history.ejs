@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Patient History - Clinic Chain</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="app-body">
+<%- include('partials/navbar') %>
+
+<div class="app-wrap" style="max-width:700px;">
+  <h2 class="page-title">Patient History</h2>
+
+  <% if (typeof patientId !== 'undefined' && patientId) { %>
+    <p style="margin-top:-14px;">
+      <a href="/chatbot/<%= patientId %>">🤖 Ask AI to summarize these reports</a>
+      &nbsp;·&nbsp;
+      <a href="/appointment/book/<%= patientId %>">📅 Book Appointment</a>
+    </p>
+  <% } %>
+
+  <% records.forEach(function(record){ %>
+    <div class="panel">
+      <p><b>Doctor:</b> <%= record.doctor %></p>
+      <p><b>Symptoms:</b> <%= record.symptoms %></p>
+      <p><b>Diagnosis:</b> <%= record.diagnosis %></p>
+      <p><b>Medicines:</b> <%= record.medicines %></p>
+      <p><b>Tests:</b> <%= record.tests %></p>
+
+      <% if(record.file){ %>
+        <p><b>File:</b>
+          <a href="/record/file/<%= record._id %>" target="_blank">View</a> |
+          <a href="/record/file/<%= record._id %>?download=true" target="_blank">Download</a>
+        </p>
+      <% } %>
+
+      <p><small><b>Date:</b> <%= record.date.toLocaleString() %></small></p>
+    </div>
+  <% }) %>
+  <% if (records.length === 0) { %>
+    <div class="panel"><p>No records found yet.</p></div>
+  <% } %>
+</div>
+<%- include('partials/themeScript') %>
+</body>
+</html>

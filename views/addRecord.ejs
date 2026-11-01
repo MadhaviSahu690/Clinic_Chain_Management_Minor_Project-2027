@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Add Medical Record - Clinic Chain</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="app-body">
+<%- include('partials/navbar') %>
+
+<div style="display:flex; justify-content:center; padding-top: 20px;">
+  <div class="container">
+    <h2>Add Medical Record</h2>
+
+    <form action="/record/add/<%= patientId %>" method="POST" enctype="multipart/form-data">
+      <input name="doctor" placeholder="Doctor Name" required>
+      <textarea name="symptoms" placeholder="Symptoms"></textarea>
+      <textarea name="diagnosis" placeholder="Diagnosis"></textarea>
+      <textarea name="medicines" placeholder="Medicines"></textarea>
+      <textarea name="tests" placeholder="Tests"></textarea>
+      <input type="file" name="file" />
+      <button>Save Record</button>
+    </form>
+  </div>
+</div>
+<%- include('partials/themeScript') %>
+</body>
+</html>
